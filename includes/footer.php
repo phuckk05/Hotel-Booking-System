@@ -1,39 +1,43 @@
-<footer class="bg-gray-900 text-gray-300 py-10">
+<footer class="bg-gray-800 text-gray-300 py-10">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Cột 1 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-white">
             <div>
-                <h2 class="text-xl font-bold text-white mb-4">Về Chúng Tôi</h2>
+                <h2 class="text-xl font-bold mb-2">Đơn giản, trực tiếp</h2>
                 <p class="text-gray-400">
-                    MeTalk là nền tảng kết nối cộng đồng, chia sẻ khoảnh khắc và trò chuyện mọi lúc mọi nơi.
+                    Đặt phòng nhanh, đi ngay!
+                </p>
+                <p class="text-gray-400">
+                    Đặt phòng dễ dàng, tận hưởng mọi khoảnh khắc
                 </p>
             </div>
 
-            <!-- Cột 2 -->
             <div>
-                <h2 class="text-xl font-bold text-white mb-4">Liên Kết Nhanh</h2>
-                <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-white">Trang Chủ</a></li>
-                    <li><a href="#" class="hover:text-white">Giới Thiệu</a></li>
-                    <li><a href="#" class="hover:text-white">Dịch Vụ</a></li>
-                    <li><a href="#" class="hover:text-white">Liên Hệ</a></li>
-                </ul>
+                <h2 class="text-xl font-bold mb-2">Tập trung vào tốc độ và trải nghiệm</h2>
+                <p class="text-gray-400">
+                    Đặt phòng trong nháy mắt
+                </p>
+                <p class="text-gray-400">
+                    Lựa chọn phòng, không chờ đợi
+                </p>
             </div>
 
-            <!-- Cột 3 -->
             <div>
-                <h2 class="text-xl font-bold text-white mb-4">Liên Hệ</h2>
-                <p class="text-gray-400">📍 123 Đường ABC, TP.HCM</p>
-                <p class="text-gray-400">📞 0123 456 789</p>
-                <p class="text-gray-400">✉ contact@metalk.com</p>
+                <h2 class="text-xl font-bold mb-2">Mang tính chuyên nghiệp và hiện đại</h2>
+                <p class="text-gray-400">
+                    Trải nghiệm đặt phòng số
+                </p>
+                <p class="text-gray-400">
+                    Kết nối bạn với những kỳ nghỉ tuyệt vời
+                </p>
             </div>
+
         </div>
 
         <hr class="my-8 border-gray-700">
 
         <!-- Bản quyền -->
         <div class="text-center text-gray-500 text-sm">
-            &copy; <?php echo date("Y"); ?> MeTalk. All rights reserved.
+            &copy; <?php echo date("Y"); ?> FastRoom. All rights reserved.
         </div>
     </div>
 </footer>
