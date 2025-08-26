@@ -1,4 +1,3 @@
-
 <div class="grid grid-cols-1 md:grid-cols-4 max-w-6xl mx-auto  px-4 py-12 pt-32 sm:pt-20 gap-4">
     <div class=" sm:sticky top-20 z-0 grid grid-rows-7 mb-4 md:col-span-1 space-y-6 rounded-lg gap-2 self-start">
         <!-- Quay lại -->
@@ -101,7 +100,7 @@
             .then(data => {
                 outputkind.innerHTML = data;
                 changeBorder(index);
-                myImage(<?php echo  $userModel->avatar ?>); // Mặc định hiển thị avatar hiện tại
+                myImage(<?php echo $userModel->avatar ?>); // Mặc định hiển thị avatar hiện tại
             })
             .catch(err => console.error(err));
     }
@@ -125,11 +124,11 @@
 
         // Đổi ảnh chính
         document.getElementById('image').src = 'assets/images/avatar-' + index + '.png';
-        
+
         // Cập nhật giá trị ẩn
         document.getElementById('avatar').value = index;
 
     }
 
-    
+
 </script>

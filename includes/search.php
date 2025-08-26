@@ -84,15 +84,6 @@
     </div>
 </div>
 <script>
-    //show loading
-    function showLoading() {
-        document.getElementById("loadingOverlay").classList.remove("hidden");
-
-        // Demo: 3s sau tự tắt
-        setTimeout(() => {
-            document.getElementById("loadingOverlay").classList.add("hidden");
-        }, 2000);
-    }
     //Lấy ngày today
     // Trả về đối tượng Date của hôm nay
     function todayDate() {

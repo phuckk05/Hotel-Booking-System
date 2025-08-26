@@ -47,7 +47,6 @@ if (isset($_GET['location']) && isset($_GET['checkin']) && isset($_GET['checkout
         <h2 class="text-3xl font-bold text-center mb-8">
             Cảm giác như ở nhà dù bạn đi đến đâu
         </h2>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             <?php for ($i = 1; $i <= 5; $i++): ?>
                 <div
@@ -80,15 +79,23 @@ if (isset($_GET['location']) && isset($_GET['checkin']) && isset($_GET['checkout
         const result = document.getElementById('result');
         if (!location || !checkIn || !checkOut || !member || !roomNumber) {
             alert('Vui lòng điền đầy đủ thông tin tìm kiếm.');
-            return false;
         }
+        else {
+            // Hiện overlay
+            document.getElementById("loadingOverlay").classList.remove("hidden");
+            // Delay 1.5s rồi redirect
+            setTimeout(() => {
+                window.location.href = `index.php?page=1&location=${location}&checkin=${checkIn}&checkout=${checkOut}&member=${member}&roomNumber=${roomNumber}`;
+                // Hiện kết quả
+            }, 1500);
+            // function showLoading() {
+            //     document.getElementById("loadingOverlay").classList.remove("hidden");
 
-        // Hiện overlay
-        document.getElementById("loadingOverlay").classList.remove("hidden");
-        // Delay 1.5s rồi redirect
-        setTimeout(() => {
-            window.location.href = `index.php?page=1&location=${location}&checkin=${checkIn}&checkout=${checkOut}&member=${member}&roomNumber=${roomNumber}`;
-            // Hiện kết quả
-        }, 1500);
+            //     // Demo: 3s sau tự tắt
+            //     setTimeout(() => {
+            //         document.getElementById("loadingOverlay").classList.add("hidden");
+            //     }, 2000);
+            // }
+        }
     }
 </script>
