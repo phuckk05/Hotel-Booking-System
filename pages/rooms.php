@@ -88,14 +88,6 @@ if (isset($_GET['location']) && isset($_GET['checkin']) && isset($_GET['checkout
                 window.location.href = `index.php?page=1&location=${location}&checkin=${checkIn}&checkout=${checkOut}&member=${member}&roomNumber=${roomNumber}`;
                 // Hiện kết quả
             }, 1500);
-            // function showLoading() {
-            //     document.getElementById("loadingOverlay").classList.remove("hidden");
-
-            //     // Demo: 3s sau tự tắt
-            //     setTimeout(() => {
-            //         document.getElementById("loadingOverlay").classList.add("hidden");
-            //     }, 2000);
-            // }
         }
     }
 </script>
