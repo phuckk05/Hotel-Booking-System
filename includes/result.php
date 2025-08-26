@@ -11,7 +11,7 @@ $dayOut = $checkOut;
 
 
 ?>
-<div class="max-w-7xl mx-auto pt-4 pb-4 space-y-4">
+<div id="result" class="max-w-7xl mx-auto pt-4 pb-4 space-y-4">
 
     <!-- Thanh filter -->
     <div class="flex flex-wrap gap-2 pb-4">

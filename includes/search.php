@@ -1,12 +1,12 @@
-<div id="serachInId" class="z-9999 flex-cols-2 md:flex  bg-white rounded-2xl shadow-lg items-center overflow-hidden max-w-7xl mx-auto">
+<div id="serachInId"
+    class="z-9999 flex-cols-2 md:flex  bg-white rounded-2xl shadow-lg items-center overflow-hidden max-w-7xl mx-auto">
     <!-- Điểm đến -->
     <div class="flex items-center px-5 w-full md:w-1/3">
         <div class="flex-1">
             <label class="text-sm text-gray-500">Điểm đến</label>
 
             <?php $provinces = json_decode(file_get_contents(__DIR__ . '/../documents/province.json'), true); ?>
-             <select id="location"
-                class="w-full font-semibold text-gray-800 focus:outline-none bg-transparent">
+            <select id="location" class="w-full font-semibold text-gray-800 focus:outline-none bg-transparent">
                 <option value="">Chọn điểm đến</option> <?php foreach ($provinces as $province): ?>
                     <option value="<?= htmlspecialchars($province['slug']) ?>">
                         <?= htmlspecialchars($province['name_with_type']) ?>
@@ -77,13 +77,22 @@
 
     <!-- Nút tìm -->
     <div class="px-5 flex justify-center p-4">
-        <button id="findButton" onclick="myFormInSearch()"
+        <button id="findButton" onclick="myFormInSearch() ; showLoading()"
             class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-10 py-3 rounded-lg shadow-md transition duration-300">
             Tìm
         </button>
     </div>
 </div>
 <script>
+    //show loading
+    function showLoading() {
+        document.getElementById("loadingOverlay").classList.remove("hidden");
+
+        // Demo: 3s sau tự tắt
+        setTimeout(() => {
+            document.getElementById("loadingOverlay").classList.add("hidden");
+        }, 2000);
+    }
     //Lấy ngày today
     // Trả về đối tượng Date của hôm nay
     function todayDate() {
