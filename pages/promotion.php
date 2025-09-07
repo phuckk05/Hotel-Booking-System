@@ -10,10 +10,11 @@
                     hấp dẫn!</p>
                 <div class="flex justify-start items-center gap-4">
                     <a href="#"
-                    class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Lưu
+                        class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Lưu
                     </a>
                     <a href="#"
-                    class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Dùng ngay</a>
+                        class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Dùng
+                        ngay</a>
                 </div>
             </div>
         </div>
@@ -27,10 +28,11 @@
                     500k.</p>
                 <div class="flex justify-start items-center gap-4">
                     <a href="#"
-                    class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Lưu
+                        class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Lưu
                     </a>
                     <a href="#"
-                    class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Dùng ngay</a>
+                        class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Dùng
+                        ngay</a>
                 </div>
             </div>
         </div>
@@ -43,10 +45,11 @@
                 <p class="text-gray-600 mb-4">Đặt phòng trước 30 ngày nhận ngay ưu đãi giảm 20% tổng hóa đơn.</p>
                 <div class="flex justify-start items-center gap-4">
                     <a href="#"
-                    class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Lưu
+                        class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Lưu
                     </a>
                     <a href="#"
-                    class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Dùng ngay</a>
+                        class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Dùng
+                        ngay</a>
                 </div>
             </div>
         </div>

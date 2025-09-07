@@ -21,7 +21,7 @@
             <button id="button-account-2"
                 class="md:col-span-1 text-center hover:bg-gray-200 rounded-lg p-4 font-bold flex items-center justify-start  w-full"
                 onclick="selectKind(2);window.scrollTo({top: 0, behavior: 'smooth'})">
-                <i class="fas fa-clock mr-2"></i> Xem gần đây
+                <i class="fas fa-clock mr-2"></i> Lich sử đặt phòng
             </button>
         </div>
         <!-- Yêu thích -->

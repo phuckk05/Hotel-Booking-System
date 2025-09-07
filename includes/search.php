@@ -1,3 +1,6 @@
+<?php
+//Lấy nội dung tìm kiếm 
+?>
 <div id="serachInId"
     class="z-9999 flex-cols-2 md:flex  bg-white rounded-2xl shadow-lg items-center overflow-hidden max-w-7xl mx-auto">
     <!-- Điểm đến -->
@@ -7,8 +10,11 @@
 
             <?php $provinces = json_decode(file_get_contents(__DIR__ . '/../documents/province.json'), true); ?>
             <select id="location" class="w-full font-semibold text-gray-800 focus:outline-none bg-transparent">
-                <option value="">Chọn điểm đến</option> <?php foreach ($provinces as $province): ?>
-                    <option value="<?= htmlspecialchars($province['slug']) ?>">
+                <option value="<?php echo isset($location) && $location ? $location : 'Chọn điểm đến'; ?>">
+                    <?php echo isset($location) && $location ? $location : 'Chọn điểm đến'; ?>
+                </option>
+                <?php foreach ($provinces as $province): ?>
+                    <option value="<?= htmlspecialchars($province['name_with_type']) ?>">
                         <?= htmlspecialchars($province['name_with_type']) ?>
                     </option> <?php endforeach; ?>
             </select>
@@ -19,7 +25,7 @@
 
         <!-- Ngày nhận -->
         <div class="flex items-center px-4 py-3 w-full md:w-1/2 relative rounded-lg cursor-pointer"
-            onclick="document.getElementById('checkin').showPicker()">
+            onclick="document.getElementById('checkin').showPicker();">
             <svg class="w-5 h-5 text-gray-500 mr-2 pointer-events-none" fill="none" stroke="currentColor"
                 stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -27,11 +33,13 @@
             </svg>
             <div class="flex-1">
                 <label class="text-sm text-gray-500">Nhận phòng</label>
-                <input id="checkinText" type="text" placeholder="Chọn ngày"
+                <input id="checkinText" type="text" value="<?php echo isset($checkIn) && $checkIn ? $checkIn : ''; ?>"
+                    placeholder="Chọn ngày"
                     class="w-full font-semibold text-gray-800 bg-transparent pointer-events-none" />
             </div>
             <!-- input ẩn nhưng trigger được -->
-            <input id="checkin" type="date" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+            <input id="checkin" value="<?php echo isset($checkIn) && $checkIn ? $checkIn : ''; ?>" type="date"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
         </div>
 
         <!-- Ngày trả -->
@@ -44,11 +52,13 @@
             </svg>
             <div class="flex-1">
                 <label class="text-sm text-gray-500">Trả phòng</label>
-                <input id="checkoutText" type="text" placeholder="Chọn ngày"
+                <input id="checkoutText" type="text"
+                    value="<?php echo isset($checkOut) && $checkOut ? $checkOut : ''; ?>" placeholder="Chọn ngày"
                     class="w-full font-semibold text-gray-800 bg-transparent pointer-events-none" />
             </div>
             <!-- input ẩn nhưng trigger được -->
-            <input id="checkout" type="date" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+            <input id="checkout" value="<?php echo isset($checkOut) && $checkOut ? $checkOut : ''; ?>" type="date"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
         </div>
 
     </div>
@@ -63,21 +73,23 @@
         <!-- Số khách -->
         <div class="flex-1">
             <label class="text-sm text-gray-500">Số khách</label>
-            <input id="member" type="number" min="1" value="2"
+            <input id="member" type="number" min="1"
+                value="<?php echo isset($checkMember) && $checkMember ? $checkMember : '1'; ?>"
                 class="w-full font-semibold text-gray-800 focus:outline-none bg-transparent cursor-pointer" />
         </div>
 
         <!-- Số phòng -->
         <div class="flex-1">
             <label class="text-sm text-gray-500">Số phòng</label>
-            <input id="roomNumber" type="number" min="1" value="1"
+            <input id="roomNumber" type="number" min="1"
+                value="<?php echo isset($checkRoomNumber) && $checkRoomNumber ? $checkRoomNumber : '1'; ?>"
                 class="w-full font-semibold text-gray-800 focus:outline-none bg-transparent cursor-pointer" />
         </div>
     </div>
 
     <!-- Nút tìm -->
     <div class="px-5 flex justify-center p-4">
-        <button id="findButton" onclick="myFormInSearch() ; showLoading()"
+        <button id="findButton" onclick="myFormInSearch()"
             class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-10 py-3 rounded-lg shadow-md transition duration-300">
             Tìm
         </button>
@@ -86,27 +98,7 @@
 <script>
     //Lấy ngày today
     // Trả về đối tượng Date của hôm nay
-    function todayDate() {
-        const d = new Date();
-        d.setHours(0, 0, 0, 0); // reset giờ để so sánh chính xác
-        return d;
-    }
 
-    // Hàm format ngày đẹp (DD/MM)
-    function formatDate(dateStr) {
-        if (!dateStr) return "";
-        const d = new Date(dateStr);
-        d.setHours(0, 0, 0, 0); // reset giờ
-
-        const today = todayDate();
-
-        if (d < today) {
-            alert('Lỗi: Ngày chọn nhỏ hơn hôm nay');
-            return "";
-        }
-
-        return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
-    }
 
     const checkin = document.getElementById("checkin");
     const checkout = document.getElementById("checkout");
@@ -120,4 +112,7 @@
     checkout.addEventListener("change", () => {
         checkoutText.value = formatDate(checkout.value);
     });
+
+
+
 </script>

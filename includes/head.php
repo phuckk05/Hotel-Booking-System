@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/DOAN/assets/css/all-tailwind-classes-full-min.css">
     <link rel="stylesheet" href="/DOAN/assets/css/style.css">
     <script src="/DOAN/assets/js/tailwind.config.js"></script>
-    <script src="/DOAN/assets/js/script.js"></script>
+    <script src="/DOAN/assets/js/Script.js"></script>
     <title>Hotel Booking System</title>
 
 </head>

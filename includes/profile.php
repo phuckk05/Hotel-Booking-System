@@ -4,7 +4,7 @@ require '../models/user.php';
 session_start();
 
 $userModel = new User($conn);
-$userModel->getByEmail($_SESSION['email']);
+$userModel->getUserById($_SESSION['user_id']);
 ?>
 <div class="mx-auto p-4">
     <h1 class="text-2xl font-bold mb-6">Tài khoản của bạn</h1>
@@ -61,7 +61,8 @@ $userModel->getByEmail($_SESSION['email']);
                 <button id="save-changed" type="submit" name="action" value="save"
                     class="bg-blue-100 text-blue-500 px-4 py-2 rounded text-sm hover:bg-gray-500 hover:text-white">Lưu
                     thay đổi</button>
-                <button id="delete-account" type="submit" name="action" value="delete" class="text-blue-500 text-sm">Xóa tài khoản</button>
+                <button id="delete-account" type="submit" name="action" value="delete" class="text-blue-500 text-sm">Xóa
+                    tài khoản</button>
             </div>
         </div>
     </form>

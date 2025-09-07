@@ -1,0 +1,80 @@
+<?php
+//lấy id user
+session_start();
+require_once("../database/config.php");
+require_once("../models/user.php");
+require_once("../models/booking.php");
+require_once("../models/booking_rooms.php");
+
+if (isset($_SESSION["user_id"]) && $_POST['check_in_last'] && $_POST['check_out_last'] && $_POST['roomNumber_last'] && $_POST['total_price']) {
+    $user_id = $_SESSION["user_id"];
+    $total_price = $_POST["total_price"];
+    $check_in = $_POST['check_in_last'];
+    $check_out = $_POST['check_out_last'];
+    $quantity1 = $_POST['roomNumber_last'];
+    //Random code
+    $newCode = new User($conn);
+    //
+    $booking_rooms = new BookingRoom($conn);
+    $code = $newCode->createCode();
+    // check code
+    while ($newCode->checkCode($code)) {
+        $code = $newCode->createCode();
+    }
+    $booking = new Booking($conn);
+
+    //Lấy data
+    $booking->user_id = $user_id;
+    $booking->check_in = $check_in;
+    $booking->check_out = $check_out;
+    $booking->quantity = $quantity1;
+    $booking->total_price = $total_price;
+    $booking->code = $code;
+    //save
+    $booking->create();
+
+    //lấy id booking
+    $booking_id = $booking->getIdBooking($user_id);
+
+} else {
+    $backUrl = $_SERVER['HTTP_REFERER'] . (strpos($_SERVER['HTTP_REFERER'], '?') ? '&' : '?') . 'success=fail';
+    header("Location: " . $backUrl);
+    exit;
+}
+
+if (isset($_POST["email"]) && $_POST['telephone'] && $_POST['counter']) {
+    $email = $_POST['email'];
+    $telephone = $_POST['telephone'];
+    $counter = $_POST['counter'];
+    for ($i = 1; $i <= $counter; $i++) {
+        if (isset($_POST["firstName-$i"]) && isset($_POST["id-$i"]) && isset($_POST["totalPrice-$i"]) && isset($_POST["totalRooms-$i"]) && $_POST["lastName-$i"]) {
+            $room_id = $_POST["id-$i"];
+            $totalPrice = $_POST["totalPrice-$i"];
+            $totalRooms = $_POST["totalRooms-$i"];
+            $select = $_POST["selected-$i"];
+            $firstName = $_POST["firstName-$i"];
+            $lastName = $_POST["lastName-$i"];
+            $fullName = $firstName . " " . $lastName;
+
+            // cập nhật dữ liệu cho booking_roooms
+            $booking_rooms->booking_id = $booking_id;
+            $booking_rooms->room_id = $room_id;
+            $booking_rooms->name = $fullName;
+            $booking_rooms->phone = $telephone;
+            $booking_rooms->email = $email;
+            $booking_rooms->quantity = $totalRooms;
+            $booking_rooms->guests = $select;
+            $booking_rooms->price = $totalPrice;
+
+            $booking_rooms->create();
+            echo "alert('Booking completed');";
+        }
+    }
+
+} else {
+    $backUrl = $_SERVER['HTTP_REFERER'] . (strpos($_SERVER['HTTP_REFERER'], '?') ? '&' : '?') . 'success=fail';
+    header("Location: " . $backUrl);
+    exit;
+}
+
+?>

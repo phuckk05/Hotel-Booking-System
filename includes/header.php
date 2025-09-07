@@ -5,7 +5,7 @@ require 'models/user.php';
 require 'models/hotel.php';
 require 'models/room.php';
 $userModel = new User($conn);
-$userModel->getByEmail($_SESSION['email']);
+$userModel->getUserById($_SESSION['user_id']);
 ?>
 <header id="headerId"
     class="fixed top-0 left-0 md:fixed md:top-0 md:left-0 w-full bg-white shadow-md z-40 overflow-visible">
@@ -33,7 +33,7 @@ $userModel->getByEmail($_SESSION['email']);
                 <div id="btnAvatar" class="avatar-Box hidden" onclick="window.location.href='index.php?page=3'">
                     <div id="avatar-btn"
                         class="bg-black rounded-full w-9 h-9 overflow-hidden cursor-pointer flex items-center justify-center  hover:transform hover:scale-105 transition duration-300">
-                        <img src="assets/images/avatar-<?php echo $userModel->avatar?>.png" alt="avatar"
+                        <img src="assets/images/avatar-<?php echo $userModel->avatar ?>.png" alt="avatar"
                             class="w-full h-full object-cover hover:opacity-80 transition duration-300">
                     </div>
                     <div id="border-in-avatar" class="hidden border-b-2 border-indigo-600 pt-2"></div>

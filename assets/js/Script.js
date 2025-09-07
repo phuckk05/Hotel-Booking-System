@@ -22,7 +22,7 @@ if (window.location.pathname.endsWith("index.php") && window.location.search.inc
         let searchId = document.getElementById('searchId');
         let findId = document.getElementById('serachInId');
 
-        if (window.scrollY > 80) {
+        if (window.scrollY > 100) {
             headerId.classList.remove('md:fixed', 'md:top-0', 'md:left-0');
 
             searchId.classList.remove('md:pt-20');
@@ -34,14 +34,14 @@ if (window.location.pathname.endsWith("index.php") && window.location.search.inc
                 'md:bg-white',
                 'md:shadow-lg',
                 'md:transition-all',
-                'md:duration-500',
+                'md:duration-1000',
                 'md:ease-in-out',
                 'md:transform',
                 'md:translate-y-0',
                 'md:opacity-100'
             );
 
-            findId.classList.add('sm:mt-2', 'md:border-2', 'md:border-gray-700', 'md:transition-all', 'md:duration-500');
+            findId.classList.add('sm:mt-2', 'md:border-2', 'md:border-gray-700', 'md:transition-all', 'md:duration-1000');
         } else {
             headerId.classList.add('md:fixed', 'md:top-0', 'md:left-0');
 
@@ -86,3 +86,47 @@ function borderClick() {
 }
 
 
+function myFormInSearch() {
+    console.log("Button Tìm clicked");
+    const location = document.getElementById('location').value;
+    const checkIn = document.getElementById('checkin').value;
+    const checkOut = document.getElementById('checkout').value;
+    const member = document.getElementById('member').value;
+    const roomNumber = document.getElementById('roomNumber').value;
+    if (!location || !checkIn || !checkOut || !member || !roomNumber) {
+        console.log("Địa chỉ : ", location);
+        console.log("Button Tìm clicked");
+        alert('Vui lòng điền đầy đủ thông tin tìm kiếm.');
+        return false;
+    }
+    // Hiện overlay nếu có
+    var loading = document.getElementById('loadingOverlay');
+    if (loading) loading.classList.remove('hidden');
+
+    // Chuyển hướng qua index.php?page=1&...
+    setTimeout(function () {
+        window.location.href = 'index.php?page=1&location=' + encodeURIComponent(location) + '&checkin=' + encodeURIComponent(checkIn) + '&checkout=' + encodeURIComponent(checkOut) + '&member=' + encodeURIComponent(member) + '&roomNumber=' + encodeURIComponent(roomNumber);
+    }, 1000);
+    return true;
+}
+function todayDate() {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0); // reset giờ để so sánh chính xác
+    return d;
+}
+
+// Hàm format ngày đẹp (DD/MM)
+function formatDate(dateStr) {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    d.setHours(0, 0, 0, 0); // reset giờ
+
+    const today = todayDate();
+
+    if (d < today) {
+        alert('Lỗi: Ngày chọn nhỏ hơn hôm nay');
+        return "";
+    }
+
+    return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
+}

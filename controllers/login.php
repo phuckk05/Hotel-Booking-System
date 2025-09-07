@@ -12,8 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //check email 
     if ($userModel->login($email, $password)) {
-        if ($_SESSION['email'] != $email) {
-            $_SESSION['email'] = $email;
+        $userId = $userModel->getIdUser($email);
+        if ($_SESSION['user_id'] != $userId) {
+            $_SESSION['user_id'] = $userId;
         }
         header("Location: ../index.php");
         exit;

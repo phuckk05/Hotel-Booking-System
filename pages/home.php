@@ -21,7 +21,8 @@
 
   </div>
 </div>
-
+<!-- Overlay Loading -->
+<?php include 'includes/loading.php'; ?>
 <!-- View: Locations -->
 <section class="max-w-7xl mx-auto px-4 py-12">
   <?php include 'includes/locations.php'; ?>

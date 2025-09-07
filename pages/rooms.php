@@ -1,10 +1,23 @@
 <?php
+include "includes/head.php";
+
 if (isset($_GET['location']) && isset($_GET['checkin']) && isset($_GET['checkout']) && isset($_GET['member']) && isset($_GET['roomNumber'])) {
     $location = htmlspecialchars($_GET['location']);
     $checkIn = htmlspecialchars($_GET['checkin']);
     $checkOut = htmlspecialchars($_GET['checkout']);
     $checkMember = htmlspecialchars($_GET['member']);
     $checkRoomNumber = htmlspecialchars($_GET['roomNumber']);
+
+
+    // // Lưu duy nhất 1 lần tìm kiếm mới nhất vào session
+    // $_SESSION['search_last'] = [
+    //     'location' => $location,
+    //     'checkin' => $checkIn,
+    //     'checkout' => $checkOut,
+    //     'checkmember' => $checkMember,
+    //     'checkroomnumber' => $checkRoomNumber
+    // ];
+
 } else {
     $location = '';
     $checkIn = '';
@@ -47,6 +60,7 @@ if (isset($_GET['location']) && isset($_GET['checkin']) && isset($_GET['checkout
         <h2 class="text-3xl font-bold text-center mb-8">
             Cảm giác như ở nhà dù bạn đi đến đâu
         </h2>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             <?php for ($i = 1; $i <= 5; $i++): ?>
                 <div
@@ -68,26 +82,3 @@ if (isset($_GET['location']) && isset($_GET['checkin']) && isset($_GET['checkout
 
 <!-- Overlay Loading -->
 <?php include 'includes/loading.php'; ?>
-
-<script>
-    function myFormInSearch() {
-        const location = document.getElementById('location').value;
-        const checkIn = document.getElementById('checkin').value;
-        const checkOut = document.getElementById('checkout').value;
-        const member = document.getElementById('member').value;
-        const roomNumber = document.getElementById('roomNumber').value;
-        const result = document.getElementById('result');
-        if (!location || !checkIn || !checkOut || !member || !roomNumber) {
-            alert('Vui lòng điền đầy đủ thông tin tìm kiếm.');
-        }
-        else {
-            // Hiện overlay
-            document.getElementById("loadingOverlay").classList.remove("hidden");
-            // Delay 1.5s rồi redirect
-            setTimeout(() => {
-                window.location.href = `index.php?page=1&location=${location}&checkin=${checkIn}&checkout=${checkOut}&member=${member}&roomNumber=${roomNumber}`;
-                // Hiện kết quả
-            }, 1500);
-        }
-    }
-</script>

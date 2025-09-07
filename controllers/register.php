@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userModel->name = "";
     $userModel->phone = "";
     $userModel->role = "customer";
-    
+
     //check email 
     if ($userModel->isEmailExists($userModel->email)) {
         header("Location: ../pages/register.php?msg=email_exists");
@@ -22,7 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     } else {
         if ($userModel->create()) {
-            $_SESSION['email'] = $userModel->email;
+            $getIdUser = $userModel->getIdUser($user);
+            $_SESSION['user_id'] = $getIdUser;
             header("Location: ../index.php?msg=register_success");
             exit;
         } else {

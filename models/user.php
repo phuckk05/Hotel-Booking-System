@@ -20,7 +20,26 @@ class User
     {
         $this->conn = $db;
     }
-
+    //Random code
+    public function createCode()
+    {
+        $length = 8;
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $code = '';
+        for ($i = 0; $i < $length; $i++) {
+            $code .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $code;
+    }
+    //check code 
+    public function checkCode($code)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM bookings WHERE code = ? LIMIT 1");
+        $stmt->bind_param("s", $code);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
+    }
     // 🔹 Kiểm tra email đã tồn tại chưa
     public function isEmailExists($email)
     {
@@ -28,6 +47,18 @@ class User
         $stmt->bind_param("s", $email);
         $stmt->execute();
         return $stmt->get_result()->num_rows > 0;
+    }
+    //lấy id user
+    public function getIdUser($email)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            return $row["id"];
+        }
+        return false;
     }
 
     // 🔹 Tạo user mới
@@ -57,6 +88,27 @@ class User
     }
 
     // 🔹 Load user theo email
+    public function getUserById($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            $this->id = $row["id"];
+            $this->name = $row["NAME"];
+            $this->email = $row["email"];
+            $this->password = $row["PASSWORD"];
+            $this->phone = $row["phone"];
+            $this->role = $row["role"];
+            $this->created_at = $row["created_at"];
+            $this->avatar = $row["avatar"];
+            return true;
+        }
+        return false;
+
+    }
     public function getByEmail($email)
     {
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
@@ -76,6 +128,7 @@ class User
             return true;
         }
         return false;
+
     }
     //Đăng nhập
     public function login($email, $password)
@@ -89,10 +142,10 @@ class User
         return false;
     }
     //Update thông tin user
-    public function upDate($email, $name, $avatar)
+    public function upDate($id, $name, $avatar)
     {
-        $statement = $this->conn->prepare("UPDATE users SET NAME = ? , avatar = ? WHERE email = ?");
-        $statement->bind_param("sss", $name, $avatar, $email);
+        $statement = $this->conn->prepare("UPDATE users SET NAME = ? , avatar = ? WHERE id = ?");
+        $statement->bind_param("sss", $name, $avatar, $id);
         $statement->execute();
     }
 }

@@ -3,10 +3,15 @@ session_start();
 include '../includes/head.php';
 require '../database/config.php';
 require '../models/room.php';
+if (isset($_GET['success']) == "fail") {
+    echo '<script>alert("please, input data!");</script>';
+}
 
-if (isset($_GET['hotel_id']) && isset($_GET['address']) && isset($_GET['city']) && isset($_GET['name']) && isset($_GET['member']) && isset($_GET['roomNumber']) && isset($_GET['dayIn']) && isset($_GET['dayOut'])) {
+
+if (isset($_GET['hotel_id']) && isset($_GET['room_id']) && isset($_GET['address']) && isset($_GET['city']) && isset($_GET['name']) && isset($_GET['member']) && isset($_GET['roomNumber']) && isset($_GET['dayIn']) && isset($_GET['dayOut'])) {
 
     $hotel_id = $_GET['hotel_id'];
+    $room_id = $_GET['room_id'];
     $rooms = new Room($conn);
     $roomsList = $rooms->getByHotel($hotel_id);
 
@@ -46,10 +51,15 @@ if (isset($_GET['hotel_id']) && isset($_GET['address']) && isset($_GET['city']) 
         $totalNights = (int) (($timestampCheckOut - $timestampCheckIn) / (60 * 60 * 24));
 
     }
+} else {
+    header("Location: ../index.php");
+    exit;
 }
 $select = 0;
 $array = [];
+$counter = 1;
 ?>
+
 <div class="w-full">
     <div class="bg-gray-700 h-10 w-full flex items-center justify-start">
         <h1 class="text-white text-center font-bold py-4 px-4 text-sm"><?php echo $address, ', ', $city ?></h1>
@@ -71,6 +81,8 @@ $array = [];
             <!-- Phòng -->
             <?php $count = 1;
             foreach ($roomsList as $room): ?>
+                <!-- kiểm tra phóng nếu số lượng phòng đã hết thì kiểm tra giao của check in - check out -->
+                <?php ?>
                 <div id="id-<?php echo $count; ?>" class="hidden"></div>
                 <div class="bg-white border rounded-lg shadow overflow-hidden mb-2">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
@@ -348,43 +360,58 @@ $array = [];
     <div class="md:col-span-2  rounded-xl pl-6 pr-6 pb-6">
         <h2 class="text-xl font-bold mb-4">Nhập thông tin chi tiết của bạn</h2>
 
-        <!-- Contact Info -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-                <label class="text-sm font-medium">Email của bạn*</label>
-                <input type="email" placeholder="example@mail.com"
-                    class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div>
-                <label class="text-sm font-medium">Số điện thoại*</label>
-                <div class="flex mt-1">
+        <form id="bookingForm" action="../controllers/booking.php" method="post">
+            <!-- các giá trị ẩn -->
+            <input id="roomNumber_last" type="text" name="roomNumber_last" value="<?php echo $roomNumber ?>"
+                placeholder="000000" class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="check_in_last" type="text" name="check_in_last" value="<?php echo $checkIn1 ?>"
+                placeholder="000000" class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="check_out_last" type="text" name="check_out_last" value="<?php echo $checkOut1 ?>"
+                placeholder="000000" class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="counter" type="text" name="counter" placeholder="000000"
+                class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="total_price" type="text" name="total_price" placeholder="000000"
+                class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <!-- Contact Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="text-sm font-medium">Email của bạn*</label>
+                    <input type="email" name="email" placeholder="example@mail.com"
+                        class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium">Số điện thoại*</label>
+                    <div class="flex mt-1">
 
-                    <input type="text" placeholder="000000" class="flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+                        <input type="text" name="telephone" placeholder="000000"
+                            class="flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Room Info -->
-        <div id="roomBooking" class="space-y-4">
+            <!-- Room Info -->
+            <div id="roomBooking" class="space-y-4">
 
-        </div>
-
-        <!-- Payment -->
-        <h3 class="text-lg font-semibold mb-3">Thanh toán</h3>
-        <div class="border rounded-lg p-4">
-            <p class="font-medium mb-2">Credit or debit card</p>
-            <input type="text" placeholder="Card number" class="w-full border rounded-lg px-3 py-2 mb-3" />
-            <div class="grid grid-cols-3 gap-3">
-                <input type="text" placeholder="MM/YY" class="border rounded-lg px-3 py-2" />
-                <input type="text" placeholder="CVV" class="border rounded-lg px-3 py-2" />
-                <input type="text" placeholder="Name on card" class="border rounded-lg px-3 py-2" />
             </div>
-        </div>
 
-        <!-- Confirm Button -->
-        <button class="mt-6 w-full bg-blue-600 text-white font-medium py-3 rounded-lg hover:bg-blue-700">
-            Đặt phòng
-        </button>
+            <!-- Payment -->
+            <h3 class="text-lg font-semibold mb-3">Thanh toán</h3>
+            <div class="border rounded-lg p-4">
+                <p class="font-medium mb-2">Credit or debit card</p>
+                <input type="text" placeholder="Card number" class="w-full border rounded-lg px-3 py-2 mb-3" />
+                <div class="grid grid-cols-3 gap-3">
+                    <input type="text" placeholder="MM/YY" class="border rounded-lg px-3 py-2" />
+                    <input type="text" placeholder="CVV" class="border rounded-lg px-3 py-2" />
+                    <input type="text" placeholder="Name on card" class="border rounded-lg px-3 py-2" />
+                </div>
+            </div>
+
+            <!-- Confirm Button -->
+            <button id="btnBookingNow" onclick="bookingNow()"
+                class="mt-6 w-full bg-blue-600 text-white font-medium py-3 rounded-lg hover:bg-blue-700">
+                Đặt phòng
+            </button>
+        </form>
         <!-- Bullet list -->
         <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm p-6">
             <li>Xác nhận đặt phòng ngay lập tức</li>
@@ -408,7 +435,6 @@ $array = [];
             </div>
         </div>
     </div>
-
     <script>
         // Khai báo mảng lưu thông tin phòng đã chọn ở phía client
         let array = [];
@@ -420,6 +446,7 @@ $array = [];
         const div1 = document.getElementById('div-1');
         const div2 = document.getElementById('div-2');
         const change = document.getElementById('change');
+        const totalTypeRoom = document.getElementById("roomNumber_last");
         // Hàm cập nhật thông tin phòng đã chọn
         btnBooking.addEventListener('click', function () {
             if (array.length === 0) {
@@ -562,6 +589,13 @@ $array = [];
             });
 
         }
+        function bookingNow() {
+            const totalItems = array.length;
+            document.getElementById("counter").value = totalItems;
+            // Tính tổng giá và chuyển sang định dạng tiền Việt Nam
+            const totalPrice = array.reduce((sum, item) => sum + Number(item.price), 0);
+            document.getElementById("total_price").value = totalPrice.toLocaleString('vi-VN');
+        }
 
         function myClickRoonInfor() {
             // Lấy thông tin phòng đã chọn
@@ -570,6 +604,7 @@ $array = [];
             let totalHTML = '';
             let totalPrice = 0;
             let roomBookingHTML = '';
+            let count = 1;
             array.forEach(item => {
                 let total = item['price'];
                 totalPrice += item['price'];
@@ -581,7 +616,7 @@ $array = [];
                              <p class="font-bold flex items-center gap-2">
                                 <span>🏨</span>${item['name']}
                             </p>
-                            
+                             
                               <p class="font-bold flex items-center gap-2">
                                 x ${item['selected_rooms']}
                             </p>
@@ -605,7 +640,7 @@ $array = [];
                              <p class="font-bold flex items-center gap-2">
                                 <span>🏨</span>${item['name']}
                             </p>
-                            
+                             
                               <p class="font-bold flex items-center gap-2">
                                 x ${item['selected_rooms']}
                             </p>
@@ -625,7 +660,7 @@ $array = [];
                 totalHTML = ` <p class="text-2xl font-bold text-gray-800">${formartPrice} ₫</p>`;
                 roomBookingHTML += ` <div class="border rounded-lg p-4 mb-6">
                 <div class="flex justify-between items-center">
-                    <p class="font-semibold">${item['name']} </p>
+                    <p class="font-semibold">${item['name']}</p>
                     <span class="bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded">
                         Giảm giá 54%
                     </span>
@@ -634,34 +669,44 @@ $array = [];
 
                 <div class="mt-3 flex items-center gap-2">
                     <label class="text-sm">Người lớn:</label>
-                    <select class="border rounded px-2 py-1">
+                    <select name="selected-${count}" class="border rounded px-2 py-1">
                         <?php for ($i = 1; $i <= $member; $i++): ?>
                             <option><?php echo $i ?></option>
                         <?php endfor; ?>
                     </select>
                 </div>
             </div>
-
+            
+            
             <!-- Guest Name -->
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="text-sm font-medium">Tên đầu tiên*</label>
-                    <input type="text" class="mt-1 w-full border rounded-lg px-3 py-2" />
+                    <input type="text" name="firstName-${count}" class="mt-1 w-full border rounded-lg px-3 py-2" />
                 </div>
+           <!-- input ẩn -->
+                  <input type="text" name="id-${count}" value="${item['room_id']}" class="hidden mt-1 w-full border rounded-lg px-3 py-2" />
+                  <input type="text" name="totalPrice-${count}" value="${formart}" class="hidden mt-1 w-full border rounded-lg px-3 py-2" />
+                 <input type="text" name="totalRooms-${count}" value="${item['selected_rooms']}" class="hidden mt-1 w-full border rounded-lg px-3 py-2" />
                 <div>
                     <label class="text-sm font-medium">Họ*</label>
-                    <input type="text" class="mt-1 w-full border rounded-lg px-3 py-2" />
+                    <input type="text" name="lastName-${count}" class="mt-1 w-full border rounded-lg px-3 py-2" />
                 </div>
             </div>`;
+                count++;
             });
+            totalTypeRoom.value = array.length;
             const totalRooms = array.reduce((sum, item) => sum + Number(item.selected_rooms), 0);
             document.getElementById('countRoom').textContent = 'Tổng ' + totalRooms + ' phòng';
+            // document.getElementById("total_price").value = formartPrice;
             document.getElementById('countPrice').textContent = array.reduce((total, item) => total + item.price, 0).toLocaleString('vi-VN') + '₫';
             // Cập nhật nội dung của phần tử roomInfo
             roomInfo.innerHTML = roomInfoHTML;
             roomInfor.innerHTML = roomInforHTML;
             total.innerHTML = totalHTML;
             roomBooking.innerHTML = roomBookingHTML;
+            count++;
+
         }
 
 

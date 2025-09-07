@@ -37,8 +37,8 @@ class Hotel
     {
         $stmt = $this->conn->prepare("SELECT id, name, address, city, description, phone, email FROM hotels");
         $stmt->execute();
-        $res = $stmt->get_result();                
-        $rows = $res->fetch_all(MYSQLI_ASSOC);    
+        $res = $stmt->get_result();
+        $rows = $res->fetch_all(MYSQLI_ASSOC);
         $res->free();
         $stmt->close();
         return $rows;
@@ -57,6 +57,27 @@ class Hotel
         $stmt = $this->conn->prepare("SELECT * FROM hotels WHERE id = :id");
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    //Lấy danh sách theo city
+    public function getByCity($city)
+    {
+        $nameCity = explode(' ', $city);
+
+        if ($nameCity[0] === "Tỉnh") {
+            $nameCityOfice = trim(implode(' ', array_slice($nameCity, 1)));
+        } elseif ($nameCity[0] === "Thành" && $nameCity[1] === "phố") {
+            $nameCityOfice = trim(implode(' ', array_slice($nameCity, 2)));
+        } else {
+            $nameCityOfice = trim($city);
+        }
+
+        $stmt = $this->conn->prepare("SELECT * FROM hotels WHERE city = ?");
+        $stmt->bind_param("s", $nameCityOfice); // "s" = string
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+
     }
 }
 ?>
