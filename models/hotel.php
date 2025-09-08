@@ -54,9 +54,19 @@ class Hotel
     // Lấy 1 khách sạn theo id 
     public function getById($id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM hotels WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->conn->prepare("SELECT * FROM hotels WHERE id = ?");
+        $stmt->bind_param("i", $id); // i = integer
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+    public function getByIdOder($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM hotels WHERE id = ? ORDER BY created_at DESC");
+        $stmt->bind_param("i", $id); // i = integer
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
     //Lấy danh sách theo city
     public function getByCity($city)

@@ -79,7 +79,7 @@ $dayOut = $checkOut;
                                 <?php echo $room ? number_format($room['price'], 0, ',', '.') . '₫' : 'Liên hệ'; ?>
                             </div>
                         </div>
-                        <a href="pages/booking.php?hotel_id=<?php echo $row['id']; ?>&room_id=<?php echo $room['id']; ?>&address=<?php echo urlencode($row['address']); ?>&dayIn=<?php echo $dayIn ?>&dayOut=<?php echo $dayOut ?>&name=<?php echo urlencode($row['name']); ?> &city=<?php echo urlencode($row['city']); ?>&member=<?php echo $memberNumber; ?>&roomNumber=<?php echo $roomNumber; ?>"
+                        <a href="pages/booking.php?hotel_id=<?php echo $row['id']; ?>&address=<?php echo urlencode($row['address']); ?>&dayIn=<?php echo $dayIn ?>&dayOut=<?php echo $dayOut ?>&name=<?php echo urlencode($row['name']); ?> &city=<?php echo urlencode($row['city']); ?>&member=<?php echo $memberNumber; ?>&roomNumber=<?php echo $roomNumber; ?>"
                             class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-green-700 transition mt-2 md:mt-0">
                             Xem Giá Tốt
                         </a>

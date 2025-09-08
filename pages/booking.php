@@ -3,15 +3,14 @@ session_start();
 include '../includes/head.php';
 require '../database/config.php';
 require '../models/room.php';
-if (isset($_GET['success']) == "fail") {
-    echo '<script>alert("please, input data!");</script>';
+if (isset($_GET['success']) == 'login') {
+    echo '<script>alert("Vui lòng đăng nhập rồi sử dựng chức năng!");</script>';
 }
 
 
-if (isset($_GET['hotel_id']) && isset($_GET['room_id']) && isset($_GET['address']) && isset($_GET['city']) && isset($_GET['name']) && isset($_GET['member']) && isset($_GET['roomNumber']) && isset($_GET['dayIn']) && isset($_GET['dayOut'])) {
+if (isset($_GET['hotel_id']) && isset($_GET['address']) && isset($_GET['city']) && isset($_GET['name']) && isset($_GET['member']) && isset($_GET['roomNumber']) && isset($_GET['dayIn']) && isset($_GET['dayOut'])) {
 
     $hotel_id = $_GET['hotel_id'];
-    $room_id = $_GET['room_id'];
     $rooms = new Room($conn);
     $roomsList = $rooms->getByHotel($hotel_id);
 
@@ -83,7 +82,7 @@ $counter = 1;
             foreach ($roomsList as $room): ?>
                 <!-- kiểm tra phóng nếu số lượng phòng đã hết thì kiểm tra giao của check in - check out -->
                 <?php ?>
-                <div id="id-<?php echo $count; ?>" class="hidden"></div>
+                <input type="text" id="id-<?php echo $count; ?>" value="<?php echo $room['id'] ?>" class="hidden">
                 <div class="bg-white border rounded-lg shadow overflow-hidden mb-2">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
                         <!-- Hình ảnh -->
@@ -362,6 +361,12 @@ $counter = 1;
 
         <form id="bookingForm" action="../controllers/booking.php" method="post">
             <!-- các giá trị ẩn -->
+            <input id="hotel_id" type="text" name="hotel_id" value="<?php echo $hotel_id ?>" placeholder="000000"
+                class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="member_last" type="text" name="member_last" value="<?php echo $member ?>" placeholder="000000"
+                class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="nameHotel_last" type="text" name="nameHotel_last" value="<?php echo $name ?>"
+                placeholder="000000" class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
             <input id="roomNumber_last" type="text" name="roomNumber_last" value="<?php echo $roomNumber ?>"
                 placeholder="000000" class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
             <input id="check_in_last" type="text" name="check_in_last" value="<?php echo $checkIn1 ?>"
@@ -370,21 +375,26 @@ $counter = 1;
                 placeholder="000000" class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
             <input id="counter" type="text" name="counter" placeholder="000000"
                 class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="total_rooms" type="text" name="total_rooms" placeholder="000000"
+                class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
             <input id="total_price" type="text" name="total_price" placeholder="000000"
                 class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
             <!-- Contact Info -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="text-sm font-medium">Email của bạn*</label>
-                    <input type="email" name="email" placeholder="example@mail.com"
+                    <input type="email" name="email" required
+                        oninvalid="this.setCustomValidity('Vui lòng nhập email !')" oninput="this.setCustomValidity('')"
+                        placeholder="example@mail.com"
                         class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                     <label class="text-sm font-medium">Số điện thoại*</label>
                     <div class="flex mt-1">
 
-                        <input type="text" name="telephone" placeholder="000000"
-                            class="flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+                        <input type="text" required oninvalid="this.setCustomValidity('Vui lòng nhập số điện thoại !')"
+                            oninput="this.setCustomValidity('')" pattern="[0-9]{10}" maxlength="10" name="telephone"
+                            required placeholder="9999999999" class="flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
                     </div>
                 </div>
             </div>
@@ -518,7 +528,7 @@ $counter = 1;
                             const totalPrice = price * selectedValue;
                             outPutPrice.textContent = 'Tổng giá: ' + totalPrice.toLocaleString('vi-VN') + '₫ ' + selectedValue + 'phòng ' + <?php echo $roomNumber ?> + 'Khách';
                             array.push({
-                                'room_id': roomId.id.split('-')[1], // Lấy ID phòng từ id của div
+                                'room_id': roomId.value, // Lấy ID phòng từ id của div
                                 'name': nameRoom.textContent, // Lấy tên phòng từ phần tử
                                 'selected_rooms': selectedValue,
                                 'price': totalPrice
@@ -555,7 +565,7 @@ $counter = 1;
                         // Cập nhật thông tin phòng đã chọn
                         if (array.length === 0) {
                             array.push({
-                                'room_id': roomId.id.split('-')[1], // Lấy ID phòng từ id của div
+                                'room_id': roomId.value, // Lấy ID phòng từ id của div
                                 'name': nameRoom.textContent, // Lấy tên phòng từ phần tử
                                 'selected_rooms': selectedValue,
                                 'price': totalPrice
@@ -564,7 +574,7 @@ $counter = 1;
                             myClickRoonInfor();
                         }
                         else {
-                            const roomIdStr = roomId.id.split('-')[1];
+                            const roomIdStr = roomId.value;
                             const found = array.find(item => item.room_id === roomIdStr);
                             if (found) {
                                 found.selected_rooms = selectedValue;
@@ -682,15 +692,19 @@ $counter = 1;
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="text-sm font-medium">Tên đầu tiên*</label>
-                    <input type="text" name="firstName-${count}" class="mt-1 w-full border rounded-lg px-3 py-2" />
+                    <input type="text" required 
+  oninvalid="this.setCustomValidity('Vui lòng nhập tên đầu !')" 
+  oninput="this.setCustomValidity('')" name="firstName-${count}" placeholder="A" class="mt-1 w-full border rounded-lg px-3 py-2" />
                 </div>
            <!-- input ẩn -->
                   <input type="text" name="id-${count}" value="${item['room_id']}" class="hidden mt-1 w-full border rounded-lg px-3 py-2" />
-                  <input type="text" name="totalPrice-${count}" value="${formart}" class="hidden mt-1 w-full border rounded-lg px-3 py-2" />
+                  <input type="text"  name="totalPrice-${count}" value="${formart}" class="hidden mt-1 w-full border rounded-lg px-3 py-2" />
                  <input type="text" name="totalRooms-${count}" value="${item['selected_rooms']}" class="hidden mt-1 w-full border rounded-lg px-3 py-2" />
                 <div>
                     <label class="text-sm font-medium">Họ*</label>
-                    <input type="text" name="lastName-${count}" class="mt-1 w-full border rounded-lg px-3 py-2" />
+                    <input type="text" required 
+            oninvalid="this.setCustomValidity('Vui lòng nhập tên cuối !')" 
+               oninput="this.setCustomValidity('')" name="lastName-${count}" placeholder="Nguyễn Văn" class="mt-1 w-full border rounded-lg px-3 py-2" />
                 </div>
             </div>`;
                 count++;
@@ -698,6 +712,7 @@ $counter = 1;
             totalTypeRoom.value = array.length;
             const totalRooms = array.reduce((sum, item) => sum + Number(item.selected_rooms), 0);
             document.getElementById('countRoom').textContent = 'Tổng ' + totalRooms + ' phòng';
+            document.getElementById('total_rooms').value = totalRooms;
             // document.getElementById("total_price").value = formartPrice;
             document.getElementById('countPrice').textContent = array.reduce((total, item) => total + item.price, 0).toLocaleString('vi-VN') + '₫';
             // Cập nhật nội dung của phần tử roomInfo
