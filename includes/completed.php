@@ -75,3 +75,10 @@ if ($_SESSION["user_id"] != null && $_SESSION["code"] != null && $_SESSION["hote
     </div>
 
 </body>
+<!-- sau 10 giây chuyển về trang chũ -->
+<script>
+    // Sau 3 giây sẽ chuyển sang completed.html
+    setTimeout(() => {
+        window.location.href = "../index.php";
+    }, 10000);
+</script>

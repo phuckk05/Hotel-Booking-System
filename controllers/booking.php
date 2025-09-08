@@ -1,4 +1,12 @@
 <?php
+//sử dụng composter gưi email
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../vendor/autoload.php';
+
+// khai báo PHPmailer
+$mail = new PHPMailer(true);
 //lấy id user
 session_start();
 require_once("../database/config.php");
@@ -9,10 +17,15 @@ require_once("../models/booking_rooms.php");
 if (isset($_SESSION["user_id"]) == null) {
     $backUrl = $_SERVER['HTTP_REFERER'] . (strpos($_SERVER['HTTP_REFERER'], '?') ? '&' : '?') . 'success=login';
     header("Location: " . $backUrl);
+
     exit;
 }
-if (isset($_SESSION["user_id"]) && $_POST['check_in_last'] && $_POST['check_out_last'] && $_POST['roomNumber_last'] && $_POST['total_price'] && $_POST['nameHotel_last'] && $_POST['member_last'] && $_POST['hotel_id'] && $_POST['total_rooms']) {
+if (isset($_SESSION["user_id"]) && $_POST['check_in_last'] && $_POST['check_out_last'] && $_POST['roomNumber_last'] && $_POST['total_price'] && $_POST['nameHotel_last'] && $_POST['member_last'] && $_POST['hotel_id'] && $_POST['total_rooms'] && $_POST['total_price'] && $_POST['nameHotel_last'] && $_POST['member_last'] && $_POST['hotel_id'] && $_POST['address'] && $_POST['city']) {
     $user_id = $_SESSION["user_id"];
+
+    $address = $_POST["address"];
+    $city = $_POST["city"];
+
     $hotel_id = $_POST['hotel_id'];
     $name = $_POST["nameHotel_last"];
     $member = $_POST["member_last"];
@@ -94,7 +107,79 @@ if (isset($_POST["email"]) && $_POST['telephone'] && $_POST['counter']) {
 
         }
     }
+
+    //thực hiện gừi email báo cho user thông tin vé phòng
+    try {
+
+        //Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = '23211tt4425@mail.tdc.edu.vn'; // Gmail của phúc
+        $mail->Password = 'jgmp mvxk hvwh vrzj';   // App Password (không phải mật khẩu Gmail thường)
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        //Recipients
+        $mail->setFrom('23211TT4425@mail.tdc.edu.vn', 'FastRoom');
+        $mail->addAddress($email, 'Khách hàng');
+
+        //Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Thông tin đặt phòng';
+        $mail->Body = '
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; background:#f9f9f9; color:#333; }
+    .container { max-width:600px; margin:0 auto; background:#fff; border-radius:8px; padding:20px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .header { background:#2563eb; color:#fff; padding:15px; border-radius:8px 8px 0 0; text-align:center; font-size:20px; font-weight:bold; }
+    .content { padding:20px; }
+    .content h2 { color:#2563eb; }
+    .footer { margin-top:20px; font-size:12px; text-align:center; color:#777; }
+    .info { margin:15px 0; }
+    .info p { margin:8px 0; }
+    .highlight { font-weight:bold; color:#2563eb; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">FastRoom - Xác nhận đặt phòng</div>
+    <div class="content">
+      <h2>Xin chào quý khách,</h2>
+      <p>Cảm ơn bạn đã đặt phòng qua <span class="highlight">FastRoom</span>. Dưới đây là thông tin đặt phòng của bạn:</p>
+      
+      <div class="info">
+        <p><strong>Mã đặt phòng:</strong> ' . $_SESSION['code'] . '</p>
+        <p><strong>Khách sạn:</strong> ' . $_SESSION['hotel_name'] . '</p>
+        <p><strong>Địa chỉ:</strong> ' . $address . "," . $city . '</p>
+        <p><strong>Ngày nhận phòng:</strong> ' . $_SESSION['check_in'] . '</p>
+        <p><strong>Ngày trả phòng:</strong> ' . $_SESSION['check_out'] . '</p>
+        <p><strong>Số lượng khách:</strong> ' . $_SESSION['member'] . '</p>
+        <p><strong>Số lượng phòng:</strong> ' . $total_rooms . '</p>
+      </div>
+
+      <p>Nếu có bất kỳ thắc mắc nào, vui lòng gửi phản hồi trên website <span class="highlight">FastRoom</span>.</p>
+      <p>Chúng tôi chúc bạn có một kỳ nghỉ tuyệt vời! 🌴</p>
+    </div>
+    <div class="footer">
+      © ' . date("Y") . ' FastRoom. Mọi quyền được bảo lưu.
+    </div>
+  </div>
+</body>
+</html>';
+
+
+        $mail->send();
+    } catch (Exception $e) {
+        echo "" . $e->getMessage() . "";
+    }
+
     include "../includes/loading.html";
+
+
 
 
 

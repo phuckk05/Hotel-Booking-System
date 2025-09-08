@@ -1,11 +1,18 @@
 <?php
 session_start();
+//check inter net
+
+require '../utils/check_internet.php';
+
 include '../includes/head.php';
 require '../database/config.php';
 require '../models/room.php';
 if (isset($_GET['success']) == 'login') {
     echo '<script>alert("Vui lòng đăng nhập rồi sử dựng chức năng!");</script>';
 }
+//lấy kết quả check
+
+$check_internet = checkInternet();
 
 
 if (isset($_GET['hotel_id']) && isset($_GET['address']) && isset($_GET['city']) && isset($_GET['name']) && isset($_GET['member']) && isset($_GET['roomNumber']) && isset($_GET['dayIn']) && isset($_GET['dayOut'])) {
@@ -359,7 +366,9 @@ $counter = 1;
     <div class="md:col-span-2  rounded-xl pl-6 pr-6 pb-6">
         <h2 class="text-xl font-bold mb-4">Nhập thông tin chi tiết của bạn</h2>
 
-        <form id="bookingForm" action="../controllers/booking.php" method="post">
+        <form id="bookingForm"
+            action="<?php echo $check_internet == true ? '../controllers/booking.php' : '../utils/internet.php'; ?>"
+            method="post">
             <!-- các giá trị ẩn -->
             <input id="hotel_id" type="text" name="hotel_id" value="<?php echo $hotel_id ?>" placeholder="000000"
                 class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
@@ -378,6 +387,10 @@ $counter = 1;
             <input id="total_rooms" type="text" name="total_rooms" placeholder="000000"
                 class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
             <input id="total_price" type="text" name="total_price" placeholder="000000"
+                class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="address" type="text" name="address" value="<?php echo $address ?>" placeholder="000000"
+                class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
+            <input id="city" type="text" name="city" value="<?php echo $city ?>" placeholder="000000"
                 class="hidden flex-1 border rounded-r-lg px-3 py-2 rounded-lg" />
             <!-- Contact Info -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

@@ -5,7 +5,9 @@ require 'models/user.php';
 require 'models/hotel.php';
 require 'models/room.php';
 $userModel = new User($conn);
-$userModel->getUserById($_SESSION['user_id']);
+if (isset($_SESSION['user_id']) != null) {
+    $userModel->getUserById($_SESSION['user_id']);
+}
 ?>
 <header id="headerId"
     class="fixed top-0 left-0 md:fixed md:top-0 md:left-0 w-full bg-white shadow-md z-40 overflow-visible">
