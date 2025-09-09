@@ -49,11 +49,25 @@ class Favorites
     }
     public function delete($user_id, $hotel_id)
     {
-
         $sql = "DELETE FROM favorites WHERE user_id = ? AND hotel_id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ss", $user_id, $hotel_id);
         return $stmt->execute();
+    }
+    public function deleteById($id)
+    {
+        $sql = "DELETE FROM favorites WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $id);
+        return $stmt->execute();
+    }
+    public function getHotel($user_id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM favorites WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
 }

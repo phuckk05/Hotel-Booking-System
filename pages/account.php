@@ -62,6 +62,7 @@
 
     </div>
 </div>
+
 <script>
     const outputkind = document.getElementById("output-kind");
 
@@ -91,7 +92,7 @@
                 window.location.href = "../DOAN/controllers/logout.php";
                 break;
             default:
-                file = "pages/profile.php";
+                file = "includes/profile.php";
         }
 
         // Load nội dung bằng fetch
@@ -100,7 +101,15 @@
             .then(data => {
                 outputkind.innerHTML = data;
                 changeBorder(index);
-                myImage(<?php echo $userModel->avatar ?>); // Mặc định hiển thị avatar hiện tại
+                if (index == 1) {
+                    myImage(<?php echo $userModel->avatar ?>); // Mặc định hiển thị avatar hiện tại
+                }
+
+                if (index == 3) {
+                    initLikeScript(index);
+                    console.log('chay qua roi');
+                }
+
             })
             .catch(err => console.error(err));
     }
@@ -129,6 +138,63 @@
         document.getElementById('avatar').value = index;
 
     }
+    //Xóa và cập lại like 
+    function initLikeScript(index) {
+        const checkboxes = document.querySelectorAll('.favorite-checkbox');
+        const btnText = document.getElementById('btnText');
+        const actionBtn = document.getElementById('fix_button');
 
+        if (!actionBtn) return;
+
+        actionBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            if (btnText.innerText === 'Chỉnh sửa') {
+                // Hiện checkbox
+                checkboxes.forEach(cb => cb.classList.toggle('hidden'));
+                // const checkedCount = document.querySelectorAll('.favorite-checkbox:checked').length;
+                // if (checkedCount == 0) {
+                //     checkboxes.forEach(cb => cb.classList.add('hidden'));
+                // }
+            } else if (btnText.innerText === 'Xóa đã chọn') {
+                // Gửi request xóa cho từng cái được chọn
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        fetch('controllers/delete_favorite.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: 'favorites=' + cb.value
+                        })
+                            .then(res => res.text())
+                            .then(data => {
+                                selectKind(index);
+                            });
+                    }
+                });
+                // Reset về chế độ chỉnh sửa
+                checkboxes.forEach(cb => {
+                    cb.classList.add('hidden');
+                    cb.checked = false;
+                });
+                btnText.innerText = 'Chỉnh sửa';
+                actionBtn.classList.add('text-blue-600');
+                actionBtn.classList.remove('bg-red-500', 'text-white');
+            }
+        });
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const checkedCount = document.querySelectorAll('.favorite-checkbox:checked').length;
+                if (checkedCount > 0) {
+                    btnText.innerText = 'Xóa đã chọn';
+                    actionBtn.classList.remove('text-blue-600');
+                    actionBtn.classList.add('bg-red-500', 'text-white');
+                } else {
+                    btnText.innerText = 'Chỉnh sửa';
+                    actionBtn.classList.add('text-blue-600');
+                    actionBtn.classList.remove('bg-red-500', 'text-white');
+                }
+            });
+        });
+    }
 
 </script>
