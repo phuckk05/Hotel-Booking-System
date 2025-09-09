@@ -1,4 +1,8 @@
 <?php
+require_once('models/favorites.php');
+require_once('database/config.php');
+$favoritesModel = new Favorites($conn);
+
 $hotelModel = new Hotel($conn);
 $roomModel = new Room($conn);
 
@@ -44,6 +48,10 @@ $dayOut = $checkOut;
     <!-- Hotel Card -->
     <?php foreach ($get_hotel_by_address as $row): ?>
         <?php
+        $isFavorite = false;
+        if (isset($_SESSION['user_id'])) {
+            $isFavorite = $favoritesModel->checkShow($_SESSION['user_id'], $row['id']); // Tạo hàm checkHotel($user_id, $hotel_id)
+        }
         // Lấy danh sách phòng theo hotel_id
         $rooms = $roomModel->getByHotel($row['id']);
         // Lấy 1 phòng đầu tiên
@@ -56,7 +64,10 @@ $dayOut = $checkOut;
                 <div class="relative w-full md:w-1/3">
                     <img src="<?php echo $room ? $room['image'] : 'uploads/no-image.jpg'; ?>" alt="Hotel"
                         class="w-full h-full object-cover">
-                    <button class="absolute top-2 right-2 bg-white p-1 rounded-full shadow">❤️</button>
+                    <button class="likeBtn absolute top-2 right-2 bg-white p-1 rounded-full shadow text-xl"
+                        data-hotel-id="<?php echo $row['id']; ?>">
+                        <?php echo $isFavorite ? "❤️" : "🤍"; ?>
+                    </button>
                 </div>
                 <!-- Nội dung -->
                 <div class="flex-1 p-4 flex flex-col justify-between">
@@ -99,3 +110,23 @@ $dayOut = $checkOut;
     <?php endif; ?>
 
 </div>
+<script>
+    document.querySelectorAll('.likeBtn').forEach(btn => {
+        let liked = false;
+        btn.addEventListener("click", function () {
+            liked = !liked;
+            btn.innerHTML = liked ? "❤️" : "🤍";
+            if (liked) {
+                fetch('controllers/add_favorite.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'hotel_id=' + btn.dataset.hotelId
+                })
+                    .then(res => res.text())
+                    .then(data => {
+                        // Xử lý thông báo nếu cần
+                    });
+            }
+        });
+    });
+</script>
