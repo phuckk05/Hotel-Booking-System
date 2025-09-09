@@ -45,6 +45,8 @@ if (isset($_SESSION["user_id"])) {
         case 3:
             //tránh user nhập bậy bạ
             if (!isset($_SESSION['user_id'])) {
+                include 'pages/home.php';
+                include 'includes/footer.php';
                 exit;
             }
             include 'pages/account.php';
